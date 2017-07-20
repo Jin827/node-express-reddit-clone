@@ -75,7 +75,7 @@ express application that takes care of its own set of paths. look at the file fo
 The authController needs access to the RedditAPI to do its work, so we pass it as a parameter and the
 controller gets returned from that function.
  */
-app.use('/auth', authController(myReddit));
+app.use( authController(myReddit));
 
 /*
  This next middleware will allow us to serve static files, as if our web server was a file server.

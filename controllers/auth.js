@@ -12,12 +12,13 @@ module.exports = function(myReddit) {
     });
     
     authController.get('/signup', function(request, response) {
-        response.send("TO BE IMPLEMENTED");
+        response.send("TO BE IMPLEMENTED18756465");
     });
     
     authController.post('/signup', function(request, response) {
         response.send("TO BE IMPLEMENTED");
     });
+    
     
     return authController;
 }

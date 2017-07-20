@@ -1,0 +1,12 @@
+extends layout.pug
+
+block title
+    title Create a Post
+
+block content
+  form(action="/auth/signup", method="POST")
+    p
+      input(type="text", name="url", placeholder="Enter a URL to content")
+    p
+      input(type="text", name="title", placeholder="Enter the title of your content")
+    button(type="submit") Create!

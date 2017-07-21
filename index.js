@@ -55,7 +55,7 @@ This custom middleware checks in the cookies if there is a SESSION token and val
 NOTE: This middleware is currently commented out! Uncomment it once you've implemented the RedditAPI
 method `getUserFromSession`
  */
-// app.use(checkLoginToken(myReddit));
+app.use(checkLoginToken(myReddit));
 
 
 
@@ -75,7 +75,7 @@ express application that takes care of its own set of paths. look at the file fo
 The authController needs access to the RedditAPI to do its work, so we pass it as a parameter and the
 controller gets returned from that function.
  */
-app.use( authController(myReddit));
+app.use('/auth', authController(myReddit));
 
 /*
  This next middleware will allow us to serve static files, as if our web server was a file server.
@@ -134,7 +134,6 @@ This is a POST endpoint. It will be called when a form is submitted with method=
 The goal of this endpoint is to receive an up/down vote by a logged in user.
 Since you can only vote if you are logged in, the onlyLoggedIn middleware is interposed before the final request handler.
 The app.* methods of express can actually take multiple middleware, forming a chain that is only used for that path
-
 This basically says: if there is a POST /vote request, first pass it thru the onlyLoggedIn middleware. If that
 middleware calls next(), then also pass it to the final request handler specified.
  */

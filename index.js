@@ -98,6 +98,7 @@ app.use('/static', express.static(__dirname + '/public'));
 app.get('/', function(request, response) {
     myReddit.getAllPosts()
     .then(function(posts) {
+        console.log(posts,"post from getAllPosts function")
         response.render('homepage', {posts: posts});
     })
     .catch(function(error) {
@@ -121,17 +122,19 @@ app.get('/r/:subreddit', function(request, response) {
     var sub= request.params.subreddit
     myReddit.getSubredditByName("funny")
     .then(result=> {
-        // console.log(result,"result!!")
+        // console.log(result,"result from getSubredditByName/index")
         if(result=== null){
             response.status(404)
+            // response.redirect('/')
         }
         else{ 
             return myReddit.getAllPosts(result.id)
-        }
+            
+            .then(result=> {
+            // console.log(result,"result from getAllPosts/index")
+            response.render('homepage',{posts: result})
     })
-    .then(result=> {
-        // console.log(result,"result from getAllPosts")
-        response.render('homepage',{posts: result})
+        }
     })
     .catch(err=> {err})
 });

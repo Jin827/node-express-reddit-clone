@@ -10,8 +10,8 @@ CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
   password VARCHAR(60) NOT NULL, -- why 60??? ask me :)
-  createdAt DATETIME NOT NULL,
-  updatedAt DATETIME NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT NOW(),
+  updatedAt DATETIME NOT NULL DEFAULT NOW(),
   UNIQUE KEY username (username)
 );
 
@@ -27,8 +27,8 @@ CREATE TABLE subreddits (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
   description VARCHAR(1000),
-  createdAt DATETIME NOT NULL,
-  updatedAt DATETIME NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT NOW(),
+  updatedAt DATETIME NOT NULL DEFAULT NOW(),
   UNIQUE KEY name (name)
 );
 
@@ -41,8 +41,8 @@ CREATE TABLE posts (
   url VARCHAR(2000) DEFAULT NULL,
   userId INT,
   subredditId INT,
-  createdAt DATETIME NOT NULL,
-  updatedAt DATETIME NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT NOW(),
+  updatedAt DATETIME NOT NULL DEFAULT NOW(),
   KEY userId (userId),
   KEY subredditId (subredditId),
   FOREIGN KEY (userId) REFERENCES users (id) ON DELETE SET NULL,
@@ -53,8 +53,8 @@ CREATE TABLE votes (
   userId INT,
   postId INT,
   voteDirection TINYINT,
-  createdAt DATETIME NOT NULL,
-  updatedAt DATETIME NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT NOW(),
+  updatedAt DATETIME NOT NULL DEFAULT NOW(),
   PRIMARY KEY (userId, postId),
   KEY userId (userId),
   KEY postId (postId),
@@ -68,8 +68,8 @@ CREATE TABLE comments (
   userId INT,
   postId INT,
   text VARCHAR(10000),
-  createdAt DATETIME NOT NULL,
-  updatedAt DATETIME NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT NOW(),
+  updatedAt DATETIME NOT NULL DEFAULT NOW(),
   FOREIGN KEY (userId) REFERENCES users (id) ON DELETE SET NULL,
   FOREIGN KEY (postId) REFERENCES posts (id) ON DELETE CASCADE
 );

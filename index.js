@@ -98,7 +98,7 @@ app.use('/static', express.static(__dirname + '/public'));
 app.get('/', function(request, response) {
     myReddit.getAllPosts()
     .then(function(posts) {
-        console.log(posts,"post from getAllPosts function")
+        // console.log(posts,"post from getAllPosts function")
         response.render('homepage', {posts: posts});
     })
     .catch(function(error) {
@@ -119,7 +119,8 @@ app.get('/subreddits', function(request, response) {
 
 // Subreddit homepage, similar to the regular home page but filtered by sub.
 app.get('/r/:subreddit', function(request, response) {
-    var sub= request.params.subreddit
+    var subredditId= request.params.subreddit
+    // console.log(subredditId,'a;kshdf;ashf')
     myReddit.getSubredditByName("funny")
     .then(result=> {
         // console.log(result,"result from getSubredditByName/index")
@@ -131,9 +132,9 @@ app.get('/r/:subreddit', function(request, response) {
             return myReddit.getAllPosts(result.id)
             
             .then(result=> {
-            // console.log(result,"result from getAllPosts/index")
-            response.render('homepage',{posts: result})
-    })
+            // console.log(result," ??? result from getAllPosts/index")
+            response.render('homepage', {posts: result})
+            })
         }
     })
     .catch(err=> {err})
@@ -141,7 +142,22 @@ app.get('/r/:subreddit', function(request, response) {
 
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    var sortingMethod= request.params.method
+    var subredditId= request.params.subreddit
+    
+    if(sortingMethod=== "hot" || sortingMethod=== "top"){
+        return myReddit.getAllPosts(subredditId, sortingMethod)
+        
+        .then(result=> {
+    // console.log(result,"result from getAllPosts/index")
+        response.render('homepage', {posts: result})
+        })
+    }
+    else{
+        response.status(404)
+    }
+    
+    
 });
 
 app.get('/post/:postId', function(request, response) {

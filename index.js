@@ -29,6 +29,7 @@ var app = express();
 // Specify the usage of the Pug template engine
 app.set('view engine', 'pug');
 
+
 /*
  This next section specifies the middleware we want to run.
  app.use takes a callback function that will be called on every request
@@ -56,7 +57,6 @@ NOTE: This middleware is currently commented out! Uncomment it once you've imple
 method `getUserFromSession`
  */
 app.use(checkLoginToken(myReddit));
-
 
 
 
@@ -115,9 +115,25 @@ app.get('/subreddits', function(request, response) {
     response.send("TO BE IMPLEMENTED");
 });
 
+
 // Subreddit homepage, similar to the regular home page but filtered by sub.
 app.get('/r/:subreddit', function(request, response) {
-    response.send("TO BE IMPLEMENTED");
+    var sub= request.params.subreddit
+    myReddit.getSubredditByName("funny")
+    .then(result=> {
+        // console.log(result,"result!!")
+        if(result=== null){
+            response.status(404)
+        }
+        else{ 
+            return myReddit.getAllPosts(result.id)
+        }
+    })
+    .then(result=> {
+        // console.log(result,"result from getAllPosts")
+        response.render('homepage',{posts: result})
+    })
+    .catch(err=> {err})
 });
 
 // Sorted home page

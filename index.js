@@ -1,3 +1,17 @@
+/*
+Download Node.JS (node -v)
+npm install npm --global (npm -v); Update my version of npm // This requires Administrator privileges, and you may need to authenticate.
+npm install -g express
+npm install -g nodemon (Nodemon simply wraps your node application and keeps an eye on any files that have changed.)
+nodemon index.js
+*/
+
+/*
+[Express Framework]
+Allows to set up middlewares to respond to HTTP Requests.
+Defines a routing table which is used to perform different actions based on HTTP Method and URL.
+Allows to dynamically render HTML Pages based on passing arguments to templates.
+*/
 var express = require('express');
 var mysql = require('promise-mysql');
 
@@ -9,6 +23,7 @@ var checkLoginToken = require('./lib/check-login-token.js'); // checks if cookie
 var onlyLoggedIn = require('./lib/only-logged-in.js'); // only allows requests from logged in users
 
 // Controllers
+// For Sign up and Login
 var authController = require('./controllers/auth.js');
 
 /*
@@ -17,7 +32,9 @@ var authController = require('./controllers/auth.js');
  */
 var RedditAPI = require('./lib/reddit.js');
 var connection = mysql.createPool({
+    host: 'localhost'
     user: 'root',
+    password: '',
     database: 'reddit'
 });
 var myReddit = new RedditAPI(connection);
@@ -50,12 +67,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 // This middleware will parse the Cookie header from all requests, and put the result in request.cookies as an object.
 app.use(cookieParser());
 
-/*
-This custom middleware checks in the cookies if there is a SESSION token and validates it.
-
-NOTE: This middleware is currently commented out! Uncomment it once you've implemented the RedditAPI
-method `getUserFromSession`
- */
+// This is custom middleware checks in the cookies if there is a SESSION token and validates it.
+// Check if user is logged in, 
+// If yes, LogedInUser gets values from users table.
 app.use(checkLoginToken(myReddit));
 
 

@@ -1,19 +1,25 @@
 var express = require('express');
 var bodyParser = require('body-parser')
 var urlencoded = bodyParser.urlencoded({extended: false})
+// body-parser: allows express to read the body and then parse that into a Json object that we can understand.
+// urlencoded : Returns middleware that only parses urlencoded bodies and only looks at requests where the Content-Type header matches the type option. 
+// extened    : allows to choose between parsing the URL-encoded data with the querystring library (when false) or the qs library (when true)
+//              {extended: false} - the value can be a string or array 
+//              {extended: true}  - any type
+
 
 module.exports = function(myReddit) {
     var authController = express.Router();
     
     authController.get('/login', function(request, response) {
-        response.render('login-form')
+        response.render('login-form');
     });
     
     
     authController.post('/login', urlencoded, function(request, response) {
         
         if (!request.body){
-            return response.status(400)
+            return response.status(400);
         }
         
         // validate username & password
@@ -27,19 +33,19 @@ module.exports = function(myReddit) {
          
          // set the key & value to bring it to the browser  
         .then(result => {
-            console.log(result," second result !!")
-            response.cookie("SESSION", result)
+            // console.log(result," second result !!");
+            response.cookie("SESSION", result);
             
         })
         
         .then(result => {
-            response.redirect('/')
+            response.redirect('/');
         })
         
         .catch(err=>{
-            console.log(err) 
-            response.status(400).send(err.message)
-        })
+            console.log(err);
+            response.status(400).send(err.message);
+        });
         
         
         
@@ -49,16 +55,16 @@ module.exports = function(myReddit) {
     
     
     authController.get('/signup', function(request, response) {
-        response.render('signup-form')
+        response.render('signup-form');
     });
     
     
     authController.post('/signup', urlencoded, function(request, response) {
         //console.log(request.body)
-        var input = request.body
+        var input = request.body;
         
         if (!input){
-            return response.status(400)
+            return response.status(400);
         }
         
         //this is where the promise chain starts
@@ -67,13 +73,13 @@ module.exports = function(myReddit) {
             password: input.password
         })
         .then(result=>{
-            response.redirect('/auth/login')
+            response.redirect('/auth/login');
         })
         .catch(err =>{
-            response.status(400).send(err.message)
-        })
+            response.status(400).send(err.message);
+        });
     });
     
     
     return authController;
-}
+};

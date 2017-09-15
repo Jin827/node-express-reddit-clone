@@ -94,6 +94,10 @@ app.use('/auth', authController(myReddit));
  */
 app.use('/static', express.static(__dirname + '/public'));
 
+
+
+
+
 // Regular home Page
 app.get('/', function(request, response) {
     myReddit.getAllPosts()
@@ -103,7 +107,7 @@ app.get('/', function(request, response) {
     })
     .catch(function(error) {
         response.render('error', {error: error});
-    })
+    });
 });
 
 // Listing of subreddits
@@ -119,42 +123,44 @@ app.get('/subreddits', function(request, response) {
 
 // Subreddit homepage, similar to the regular home page but filtered by sub.
 app.get('/r/:subreddit', function(request, response) {
-    var subredditId= request.params.subreddit
+    
     // console.log(subredditId,'a;kshdf;ashf')
-    myReddit.getSubredditByName("funny")
+    return myReddit.getSubredditByName(request.params.subreddit)
     .then(result=> {
         // console.log(result,"result from getSubredditByName/index")
         if(result=== null){
-            response.status(404)
+            response.status(404);
             // response.redirect('/')
         }
         else{ 
-            return myReddit.getAllPosts(result.id)
-            
-            .then(result=> {
-            // console.log(result," ??? result from getAllPosts/index")
-            response.render('homepage', {posts: result})
-            })
+            console.log(result, "should contain subreddit id");
+            return result.id;
         }
     })
-    .catch(err=> {err})
+    .then(result => myReddit.getAllPosts(result))
+    .then(result=> {
+          console.log("getAllPosts/r/subreddit//index.js", JSON.stringify(result[0], null, 4));
+        response.render('homepage', {posts: result});
+    })
+    
+    .catch(err=> {err});
 });
 
 // Sorted home page
 app.get('/sort/:method', function(request, response) {
-    var sortingMethod= request.params.method
-    var subredditId= request.params.subreddit
+    var sortingMethod= request.params.method;
+    var subredditId= request.params.subreddit;
     
     if(sortingMethod=== "hot" || sortingMethod=== "top"){
         return myReddit.getAllPosts(subredditId, sortingMethod)
         
         .then(result=> {
     // console.log(result,"result from getAllPosts/index")
-        response.render('homepage', {posts: result})
-        })
+        response.render('homepage', {posts: result});
+        });
     }
     else{
-        response.status(404)
+        response.status(404);
     }
     
     
@@ -185,6 +191,8 @@ app.get('/createPost', onlyLoggedIn, function(request, response) {
 app.post('/createPost', onlyLoggedIn, function(request, response) {
     response.send("TO BE IMPLEMENTED");
 });
+
+
 
 // Listen
 var port = process.env.PORT || 3000;
